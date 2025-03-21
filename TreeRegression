@@ -1,0 +1,42 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.tree import DecisionTreeRegressor
+from sklearn import tree
+from sklearn import metrics
+from sklearn. model_selection import train_test_split
+
+url = r'https://raw.githubusercontent.com/likarajo/petrol_consumption/master/data/petrol_consumption.csv'
+dataset = pd.read_csv(url)
+dataset.head()
+
+print(dataset.shape)
+print(dataset.describe())
+
+plt.scatter(dataset['Population_Driver_licence(%)'], dataset['Petrol_Consumption'], color='b', label="Потребление газа")
+plt.xlabel("Процет людей с водительской лицензией")
+plt.ylabel("Потребление газа")
+plt.show()
+
+X = dataset.iloc[:, :-1].values
+y = dataset.iloc[:, 1].values
+print(X)
+print(y)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+
+regressor = DecisionTreeRegressor()
+regressor.fit(X_train, y_train)
+
+tree.plot_tree(regressor)
+
+y_pred = regressor.predict(X_test)
+y_pred
+
+df = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
+df
+
+metrics.mean_absolute_error(y_test, y_pred) / np.average(y) * 100
+print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))
+
+print(dataset['Petrol_Consumption'].sum())
+dataset.shape
